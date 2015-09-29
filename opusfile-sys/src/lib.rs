@@ -5,21 +5,21 @@ extern crate libc;
 use libc::*;
 
 
-pub static OP_FALSE         : c_int = -1;
-pub static OP_EOF           : c_int = -2;
-pub static OP_HOLE          : c_int = -3;
-pub static OP_EREAD         : c_int = -128;
-pub static OP_EFAULT        : c_int = -129;
-pub static OP_EIMPL         : c_int = -130;
-pub static OP_EINVAL        : c_int = -131;
-pub static OP_ENOTFORMAT    : c_int = -132;
-pub static OP_EBADHEADER    : c_int = -133;
-pub static OP_EVERSION      : c_int = -134;
-pub static OP_ENOTAUDIO     : c_int = -135;
-pub static OP_EBADPACKET    : c_int = -136;
-pub static OP_EBADLINK      : c_int = -137;
-pub static OP_ENOSEEK       : c_int = -138;
-pub static OP_EBADTIMESTAMP : c_int = -139;
+pub const OP_FALSE         : c_int = -1;
+pub const OP_EOF           : c_int = -2;
+pub const OP_HOLE          : c_int = -3;
+pub const OP_EREAD         : c_int = -128;
+pub const OP_EFAULT        : c_int = -129;
+pub const OP_EIMPL         : c_int = -130;
+pub const OP_EINVAL        : c_int = -131;
+pub const OP_ENOTFORMAT    : c_int = -132;
+pub const OP_EBADHEADER    : c_int = -133;
+pub const OP_EVERSION      : c_int = -134;
+pub const OP_ENOTAUDIO     : c_int = -135;
+pub const OP_EBADPACKET    : c_int = -136;
+pub const OP_EBADLINK      : c_int = -137;
+pub const OP_ENOSEEK       : c_int = -138;
+pub const OP_EBADTIMESTAMP : c_int = -139;
 
 
 #[repr(C)]
@@ -48,22 +48,22 @@ pub struct OpusTags
 
 
 #[allow(non_camel_case_types)]
-pub type op_read_func  = extern "C" fn (*mut c_void, *mut c_uchar, c_int) -> c_int;
+pub type op_read_func  = unsafe extern "C" fn (*mut c_void, *mut c_uchar, c_int) -> c_int;
 #[allow(non_camel_case_types)]
-pub type op_seek_func  = extern "C" fn (*mut c_void, i64, c_int) -> c_int;
+pub type op_seek_func  = unsafe extern "C" fn (*mut c_void, i64, c_int) -> c_int;
 #[allow(non_camel_case_types)]
-pub type op_tell_func  = extern "C" fn (*mut c_void) -> i64;
+pub type op_tell_func  = unsafe extern "C" fn (*mut c_void) -> i64;
 #[allow(non_camel_case_types)]
-pub type op_close_func = extern "C" fn (*mut c_void) -> c_int;
+pub type op_close_func = unsafe extern "C" fn (*mut c_void) -> c_int;
 
 
 #[repr(C)]
 pub struct OpusFileCallbacks
 {
 	pub read  : op_read_func,
-	pub seek  : op_seek_func,
-	pub tell  : op_tell_func,
-	pub close : op_close_func,
+	pub seek  : Option<op_seek_func>,
+	pub tell  : Option<op_tell_func>,
+	pub close : Option<op_close_func>,
 }
 
 
