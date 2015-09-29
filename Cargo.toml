@@ -1,0 +1,17 @@
+[package]
+name = "opusfile-rs"
+version = "0.1.0"
+authors = ["Jameson Ernst"]
+
+
+[lib]
+name = "opusfile"
+
+[dependencies]
+libc = "*"
+enum_primitive = "*"
+#opusfile-sys = "*"
+
+[dependencies.opusfile-sys]
+path = "opusfile-sys"
+
