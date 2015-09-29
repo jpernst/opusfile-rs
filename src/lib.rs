@@ -7,8 +7,7 @@ extern crate opusfile_sys;
 
 use std::borrow::ToOwned;
 use std::vec::Vec;
-use std::rc::Rc;
-use std::{mem, slice, string, io, ptr};
+use std::{mem, slice, io, ptr};
 use std::io::{Read, Seek};
 use std::ffi::CStr;
 use enum_primitive::FromPrimitive;
@@ -49,7 +48,7 @@ enum_from_primitive! {
 pub type OpusFileResult<T> = Result<T, OpusFileError>;
 
 
-trait ReadSeek: Read + Seek { }
+pub trait ReadSeek: Read + Seek { }
 impl <T> ReadSeek for T where T : Read + Seek { }
 
 
@@ -62,8 +61,8 @@ enum DataSource <'s> {
 
 pub struct OggOpusFile <'s>
 {
-    of   : *mut opus::OggOpusFile,
-    data : DataSource<'s>,
+    of    : *mut opus::OggOpusFile,
+    _data : DataSource<'s>,
 }
 impl <'s> OggOpusFile<'s>
 {
@@ -72,7 +71,7 @@ impl <'s> OggOpusFile<'s>
         unsafe {
             let mut e: libc::c_int = 0;
             match opus::op_open_memory(data.as_ptr() as *const libc::c_uchar, data.len() as libc::size_t, &mut e as *mut libc::c_int) {
-                of if of != ptr::null_mut() => Ok(OggOpusFile { of: of, data: DataSource::Slice(data), }),
+                of if of != ptr::null_mut() => Ok(OggOpusFile { of: of, _data: DataSource::Slice(data), }),
                 _ => Err(OpusFileError::from_isize(e as isize).unwrap()),
             }
         }
@@ -83,7 +82,7 @@ impl <'s> OggOpusFile<'s>
         unsafe {
             let mut e: libc::c_int = 0;
             match opus::op_open_callbacks(mem::transmute_copy(&data), &CB, ptr::null(), 0, &mut e as *mut libc::c_int) {
-                of if of != ptr::null_mut() => Ok(OggOpusFile { of: of, data: DataSource::Read(data), }),
+                of if of != ptr::null_mut() => Ok(OggOpusFile { of: of, _data: DataSource::Read(data), }),
                 _ => Err(OpusFileError::from_isize(e as isize).unwrap()),
             }
         }
@@ -94,7 +93,7 @@ impl <'s> OggOpusFile<'s>
         unsafe {
             let mut e: libc::c_int = 0;
             match opus::op_open_callbacks(mem::transmute_copy(&data), &CB, ptr::null(), 0, &mut e as *mut libc::c_int) {
-                of if of != ptr::null_mut() => Ok(OggOpusFile { of: of, data: DataSource::ReadSeek(data), }),
+                of if of != ptr::null_mut() => Ok(OggOpusFile { of: of, _data: DataSource::ReadSeek(data), }),
                 _ => Err(OpusFileError::from_isize(e as isize).unwrap()),
             }
         }
@@ -175,11 +174,11 @@ impl <'s> OggOpusFile<'s>
         unsafe {
             match opus::op_tags(self.of as *const opus::OggOpusFile, li as libc::c_int) {
                 ot if ot != ptr::null() => Some(OpusTags {
-                    user_comments: [0 .. (*ot).comments as usize].map(|ci| {
+                    user_comments: (0 .. (*ot).comments as usize).map(|ci| {
                         let len = *((*ot).comment_lengths as *const i32).offset(ci as isize) as usize;
                         String::from_utf8_lossy(slice::from_raw_parts(*((*ot).user_comments as *const *const u8).offset(ci as isize), len)).into_owned()
                     }).collect(),
-                    vendor: CStr::from_ptr((*ot).vendor as *const i8).to_string_lossy().into_owned(),
+                    vendor: String::from_utf8_lossy(CStr::from_ptr((*ot).vendor as *const i8).to_bytes()).into_owned(),
                 }),
                 _ => None,
             }
@@ -283,16 +282,27 @@ impl <'s> OggOpusFile<'s>
 
 
 unsafe extern "C" fn read_cb (src: *mut libc::c_void, buf: *mut libc::c_uchar, size: libc::c_int) -> libc::c_int {
-    fn fill_buffer (read : &mut Read, buf : &[u8]) -> usize
+    fn fill_buffer <R> (mut read : R, mut buf : &mut [u8]) -> usize
+        where R : Read
     {
         let mut i = 0;
+        while i < buf.len() {
+            let buf = &mut buf[i ..];
+            match read.read(buf) {
+                Ok(0) => break,
+                Ok(n) => i += n,
+                Err(ref e) if e.kind() == io::ErrorKind::Interrupted => continue,
+                Err(_) => break,
+            }
+        }
 
-        0
+        i
     }
 
+    let buf = slice::from_raw_parts_mut(buf, size as usize);
     match *(src as *mut DataSource) {
-        DataSource::Read(r) => fill_buffer(r, slice::from_raw_parts_mut(buf, size)),
-        DataSource::ReadSeek(r) => fill_buffer(r),
+        DataSource::Read(ref mut r) => fill_buffer(r, buf) as i32,
+        DataSource::ReadSeek(ref mut r) => fill_buffer(r, buf) as i32,
         _ => -1,
     }
 }
@@ -307,11 +317,14 @@ unsafe extern "C" fn seek_cb (src : *mut libc::c_void, pos: i64, style : libc::c
     };
     
     match *(src as *mut DataSource) {
-        DataSource::ReadSeek(s) => {
-            while let Err(e) = s.seek(pos) { match e.kind() {
-                io::ErrorKind::Interrupted => continue,
-                _ => return -1,
-            }}
+        DataSource::ReadSeek(ref mut s) => {
+            loop {
+                match s.seek(pos) {
+                    Ok(_) => return 0,
+                    Err(ref e) if e.kind() == io::ErrorKind::Interrupted => continue,
+                    Err(_) => return -1,
+                }
+            }
         }
         _ => -1,
     }
@@ -320,11 +333,14 @@ unsafe extern "C" fn seek_cb (src : *mut libc::c_void, pos: i64, style : libc::c
 
 unsafe extern "C" fn tell_cb (src: *mut libc::c_void) -> i64 {
     match *(src as *mut DataSource) {
-        DataSource::ReadSeek(s) => {
-            while let Err(e) = s.seek(io::SeekFrom::Current(0)) { match e.kind() {
-                io::ErrorKind::Interrupted => continue,
-                _ => return -1,
-            }}
+        DataSource::ReadSeek(ref mut s) => {
+            loop {
+                match s.seek(io::SeekFrom::Current(0)) {
+                    Ok(pos) => return pos as i64,
+                    Err(ref e) if e.kind() == io::ErrorKind::Interrupted => continue,
+                    Err(_) => return -1,
+                }
+            }
         }
         _ => -1,
     }
