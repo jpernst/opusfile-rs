@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `opus_sys` crate.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, opus_sys">
+
+    <title>opus_sys - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../main.css">
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <section class="sidebar">
+        
+        <p class='location'></p><script>window.sidebarCurrent = {name: 'opus_sys', ty: 'mod', relpath: '../'};</script>
+    </section>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content mod">
+<h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>opus_sys</a></span><span class='out-of-band'><span id='render-detail'>
+            <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                [<span class='inner'>&#x2212;</span>]
+            </a>
+        </span><a id='src-0' class='srclink' href='../src/opus_sys/lib.rs.html#1-255' title='goto source code'>[src]</a></span></h1>
+<h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
+<table>
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.OpusDecoder.html'
+                               title='opus_sys::OpusDecoder'>OpusDecoder</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.OpusEncoder.html'
+                               title='opus_sys::OpusEncoder'>OpusEncoder</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.OpusMSDecoder.html'
+                               title='opus_sys::OpusMSDecoder'>OpusMSDecoder</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.OpusMSEncoder.html'
+                               title='opus_sys::OpusMSEncoder'>OpusMSEncoder</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='enum' href='enum.OpusRepacketizer.html'
+                               title='opus_sys::OpusRepacketizer'>OpusRepacketizer</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                </table><h2 id='constants' class='section-header'><a href="#constants">Constants</a></h2>
+<table>
+                    <tr class=' module-item'>
+                        <td><a class='constant' href='constant.OPUS_ALLOC_FAIL.html'
+                               title='opus_sys::OPUS_ALLOC_FAIL'>OPUS_ALLOC_FAIL</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='constant' href='constant.OPUS_BAD_ARG.html'
+                               title='opus_sys::OPUS_BAD_ARG'>OPUS_BAD_ARG</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='constant' href='constant.OPUS_BUFFER_TOO_SMALL.html'
+                               title='opus_sys::OPUS_BUFFER_TOO_SMALL'>OPUS_BUFFER_TOO_SMALL</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='constant' href='constant.OPUS_INTERNAL_ERROR.html'
+                               title='opus_sys::OPUS_INTERNAL_ERROR'>OPUS_INTERNAL_ERROR</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='constant' href='constant.OPUS_INVALID_PACKET.html'
+                               title='opus_sys::OPUS_INVALID_PACKET'>OPUS_INVALID_PACKET</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='constant' href='constant.OPUS_INVALID_STATE.html'
+                               title='opus_sys::OPUS_INVALID_STATE'>OPUS_INVALID_STATE</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='constant' href='constant.OPUS_OK.html'
+                               title='opus_sys::OPUS_OK'>OPUS_OK</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='constant' href='constant.OPUS_UNIMPLEMENTED.html'
+                               title='opus_sys::OPUS_UNIMPLEMENTED'>OPUS_UNIMPLEMENTED</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                </table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
+<table>
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_decode.html'
+                               title='opus_sys::opus_decode'>opus_decode</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_decode_float.html'
+                               title='opus_sys::opus_decode_float'>opus_decode_float</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_decoder_create.html'
+                               title='opus_sys::opus_decoder_create'>opus_decoder_create</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_decoder_ctl.html'
+                               title='opus_sys::opus_decoder_ctl'>opus_decoder_ctl</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_decoder_destroy.html'
+                               title='opus_sys::opus_decoder_destroy'>opus_decoder_destroy</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_decoder_get_nb_samples.html'
+                               title='opus_sys::opus_decoder_get_nb_samples'>opus_decoder_get_nb_samples</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_decoder_get_size.html'
+                               title='opus_sys::opus_decoder_get_size'>opus_decoder_get_size</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_decoder_init.html'
+                               title='opus_sys::opus_decoder_init'>opus_decoder_init</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_encode.html'
+                               title='opus_sys::opus_encode'>opus_encode</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_encode_float.html'
+                               title='opus_sys::opus_encode_float'>opus_encode_float</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_encoder_create.html'
+                               title='opus_sys::opus_encoder_create'>opus_encoder_create</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_encoder_ctl.html'
+                               title='opus_sys::opus_encoder_ctl'>opus_encoder_ctl</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_encoder_destroy.html'
+                               title='opus_sys::opus_encoder_destroy'>opus_encoder_destroy</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_encoder_get_size.html'
+                               title='opus_sys::opus_encoder_get_size'>opus_encoder_get_size</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_encoder_init.html'
+                               title='opus_sys::opus_encoder_init'>opus_encoder_init</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_get_version_string.html'
+                               title='opus_sys::opus_get_version_string'>opus_get_version_string</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_multistream_decode.html'
+                               title='opus_sys::opus_multistream_decode'>opus_multistream_decode</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_multistream_decode_float.html'
+                               title='opus_sys::opus_multistream_decode_float'>opus_multistream_decode_float</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_multistream_decoder_create.html'
+                               title='opus_sys::opus_multistream_decoder_create'>opus_multistream_decoder_create</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_multistream_decoder_ctl.html'
+                               title='opus_sys::opus_multistream_decoder_ctl'>opus_multistream_decoder_ctl</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_multistream_decoder_destroy.html'
+                               title='opus_sys::opus_multistream_decoder_destroy'>opus_multistream_decoder_destroy</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_multistream_decoder_get_size.html'
+                               title='opus_sys::opus_multistream_decoder_get_size'>opus_multistream_decoder_get_size</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_multistream_decoder_init.html'
+                               title='opus_sys::opus_multistream_decoder_init'>opus_multistream_decoder_init</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_multistream_encode.html'
+                               title='opus_sys::opus_multistream_encode'>opus_multistream_encode</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_multistream_encode_float.html'
+                               title='opus_sys::opus_multistream_encode_float'>opus_multistream_encode_float</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_multistream_encoder_create.html'
+                               title='opus_sys::opus_multistream_encoder_create'>opus_multistream_encoder_create</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_multistream_encoder_ctl.html'
+                               title='opus_sys::opus_multistream_encoder_ctl'>opus_multistream_encoder_ctl</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_multistream_encoder_destroy.html'
+                               title='opus_sys::opus_multistream_encoder_destroy'>opus_multistream_encoder_destroy</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_multistream_encoder_get_size.html'
+                               title='opus_sys::opus_multistream_encoder_get_size'>opus_multistream_encoder_get_size</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_multistream_encoder_init.html'
+                               title='opus_sys::opus_multistream_encoder_init'>opus_multistream_encoder_init</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_multistream_packet_pad.html'
+                               title='opus_sys::opus_multistream_packet_pad'>opus_multistream_packet_pad</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_multistream_packet_unpad.html'
+                               title='opus_sys::opus_multistream_packet_unpad'>opus_multistream_packet_unpad</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_multistream_surround_encoder_create.html'
+                               title='opus_sys::opus_multistream_surround_encoder_create'>opus_multistream_surround_encoder_create</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_multistream_surround_encoder_get_size.html'
+                               title='opus_sys::opus_multistream_surround_encoder_get_size'>opus_multistream_surround_encoder_get_size</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_multistream_surround_encoder_init.html'
+                               title='opus_sys::opus_multistream_surround_encoder_init'>opus_multistream_surround_encoder_init</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_packet_get_bandwidth.html'
+                               title='opus_sys::opus_packet_get_bandwidth'>opus_packet_get_bandwidth</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_packet_get_nb_channels.html'
+                               title='opus_sys::opus_packet_get_nb_channels'>opus_packet_get_nb_channels</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_packet_get_nb_frames.html'
+                               title='opus_sys::opus_packet_get_nb_frames'>opus_packet_get_nb_frames</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_packet_get_nb_samples.html'
+                               title='opus_sys::opus_packet_get_nb_samples'>opus_packet_get_nb_samples</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_packet_get_samples_per_frame.html'
+                               title='opus_sys::opus_packet_get_samples_per_frame'>opus_packet_get_samples_per_frame</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_packet_pad.html'
+                               title='opus_sys::opus_packet_pad'>opus_packet_pad</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_packet_parse.html'
+                               title='opus_sys::opus_packet_parse'>opus_packet_parse</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_packet_unpad.html'
+                               title='opus_sys::opus_packet_unpad'>opus_packet_unpad</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_pcm_soft_clip.html'
+                               title='opus_sys::opus_pcm_soft_clip'>opus_pcm_soft_clip</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_repacketizer_cat.html'
+                               title='opus_sys::opus_repacketizer_cat'>opus_repacketizer_cat</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_repacketizer_create.html'
+                               title='opus_sys::opus_repacketizer_create'>opus_repacketizer_create</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_repacketizer_destroy.html'
+                               title='opus_sys::opus_repacketizer_destroy'>opus_repacketizer_destroy</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_repacketizer_get_nb_frames.html'
+                               title='opus_sys::opus_repacketizer_get_nb_frames'>opus_repacketizer_get_nb_frames</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_repacketizer_get_size.html'
+                               title='opus_sys::opus_repacketizer_get_size'>opus_repacketizer_get_size</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_repacketizer_init.html'
+                               title='opus_sys::opus_repacketizer_init'>opus_repacketizer_init</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_repacketizer_out.html'
+                               title='opus_sys::opus_repacketizer_out'>opus_repacketizer_out</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_repacketizer_out_range.html'
+                               title='opus_sys::opus_repacketizer_out_range'>opus_repacketizer_out_range</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='fn' href='fn.opus_strerror.html'
+                               title='opus_sys::opus_strerror'>opus_strerror</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                </table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
+<table>
+                    <tr class=' module-item'>
+                        <td><a class='type' href='type.int16_t.html'
+                               title='opus_sys::int16_t'>int16_t</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='type' href='type.int32_t.html'
+                               title='opus_sys::int32_t'>int32_t</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='type' href='type.int64_t.html'
+                               title='opus_sys::int64_t'>int64_t</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='type' href='type.int8_t.html'
+                               title='opus_sys::int8_t'>int8_t</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='type' href='type.int_fast16_t.html'
+                               title='opus_sys::int_fast16_t'>int_fast16_t</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='type' href='type.int_fast32_t.html'
+                               title='opus_sys::int_fast32_t'>int_fast32_t</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='type' href='type.int_fast64_t.html'
+                               title='opus_sys::int_fast64_t'>int_fast64_t</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='type' href='type.int_fast8_t.html'
+                               title='opus_sys::int_fast8_t'>int_fast8_t</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='type' href='type.int_least16_t.html'
+                               title='opus_sys::int_least16_t'>int_least16_t</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='type' href='type.int_least32_t.html'
+                               title='opus_sys::int_least32_t'>int_least32_t</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='type' href='type.int_least64_t.html'
+                               title='opus_sys::int_least64_t'>int_least64_t</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='type' href='type.int_least8_t.html'
+                               title='opus_sys::int_least8_t'>int_least8_t</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='type' href='type.intmax_t.html'
+                               title='opus_sys::intmax_t'>intmax_t</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='type' href='type.intptr_t.html'
+                               title='opus_sys::intptr_t'>intptr_t</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='type' href='type.opus_int16.html'
+                               title='opus_sys::opus_int16'>opus_int16</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='type' href='type.opus_int32.html'
+                               title='opus_sys::opus_int32'>opus_int32</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='type' href='type.opus_uint16.html'
+                               title='opus_sys::opus_uint16'>opus_uint16</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='type' href='type.opus_uint32.html'
+                               title='opus_sys::opus_uint32'>opus_uint32</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='type' href='type.uint16_t.html'
+                               title='opus_sys::uint16_t'>uint16_t</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='type' href='type.uint32_t.html'
+                               title='opus_sys::uint32_t'>uint32_t</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='type' href='type.uint64_t.html'
+                               title='opus_sys::uint64_t'>uint64_t</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='type' href='type.uint8_t.html'
+                               title='opus_sys::uint8_t'>uint8_t</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='type' href='type.uint_fast16_t.html'
+                               title='opus_sys::uint_fast16_t'>uint_fast16_t</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='type' href='type.uint_fast32_t.html'
+                               title='opus_sys::uint_fast32_t'>uint_fast32_t</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='type' href='type.uint_fast64_t.html'
+                               title='opus_sys::uint_fast64_t'>uint_fast64_t</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='type' href='type.uint_fast8_t.html'
+                               title='opus_sys::uint_fast8_t'>uint_fast8_t</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='type' href='type.uint_least16_t.html'
+                               title='opus_sys::uint_least16_t'>uint_least16_t</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='type' href='type.uint_least32_t.html'
+                               title='opus_sys::uint_least32_t'>uint_least32_t</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='type' href='type.uint_least64_t.html'
+                               title='opus_sys::uint_least64_t'>uint_least64_t</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='type' href='type.uint_least8_t.html'
+                               title='opus_sys::uint_least8_t'>uint_least8_t</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='type' href='type.uintmax_t.html'
+                               title='opus_sys::uintmax_t'>uintmax_t</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                
+                    <tr class=' module-item'>
+                        <td><a class='type' href='type.uintptr_t.html'
+                               title='opus_sys::uintptr_t'>uintptr_t</a></td>
+                        <td class='docblock short'>
+                             
+                        </td>
+                    </tr>
+                </table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <div id="help" class="hidden">
+        <div>
+            <div class="shortcuts">
+                <h1>Keyboard Shortcuts</h1>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h1>Search Tricks</h1>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>typedef</code> (or
+                    <code>tdef</code>).
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code>)
+                </p>
+            </div>
+        </div>
+    </div>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "opus_sys";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script async src="../search-index.js"></script>
+</body>
+</html>
