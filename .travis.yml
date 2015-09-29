@@ -1,9 +1,5 @@
 language: rust
-sudo: false
-addons:
-  apt:
-    packages:
-    - libopusfile-dev
+sudo: required
 script:
 - cargo test
 - cargo doc

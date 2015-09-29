@@ -3,6 +3,7 @@
 extern crate libc;
 #[macro_use]
 extern crate enum_primitive;
+extern crate opusfile_sys;
 
 use std::borrow::ToOwned;
 use std::vec::Vec;
@@ -11,11 +12,11 @@ use std::io::{Read, Seek};
 use std::ffi::CStr;
 use enum_primitive::FromPrimitive;
 
-mod ffi;
+use opusfile_sys as ffi;
 
 
 static CB : ffi::OpusFileCallbacks = ffi::OpusFileCallbacks {
-    read:  read_cb,
+    read:  Some(read_cb),
     seek:  Some(seek_cb),
     tell:  Some(tell_cb),
     close: None,
@@ -26,21 +27,21 @@ enum_from_primitive! {
     #[derive(Copy, Clone, PartialEq, Eq, Debug)]
     pub enum OpusFileError
     {
-        False         = ffi::OP_FALSE as isize,
-        Eof           = ffi::OP_EOF as isize,
-        Hole          = ffi::OP_HOLE as isize,
-        ERead         = ffi::OP_EREAD as isize,
-        EFault        = ffi::OP_EFAULT as isize,
-        EImpl         = ffi::OP_EIMPL as isize,
-        EInval        = ffi::OP_EINVAL as isize,
-        ENotFormat    = ffi::OP_ENOTFORMAT as isize,
-        EBadHeader    = ffi::OP_EBADHEADER as isize,
-        EVersion      = ffi::OP_EVERSION as isize,
-        ENotAudio     = ffi::OP_ENOTAUDIO as isize,
-        EBadPacket    = ffi::OP_EBADPACKET as isize,
-        EBadLink      = ffi::OP_EBADLINK as isize,
-        ENoSeek       = ffi::OP_ENOSEEK as isize,
-        EBadTimeStamp = ffi::OP_EBADTIMESTAMP as isize,
+        False         = -1,
+        Eof           = -2,
+        Hole          = -3,
+        ERead         = -128,
+        EFault        = -129,
+        EImpl         = -130,
+        EInval        = -131,
+        ENotFormat    = -132,
+        EBadHeader    = -133,
+        EVersion      = -134,
+        ENotAudio     = -135,
+        EBadPacket    = -136,
+        EBadLink      = -137,
+        ENoSeek       = -138,
+        EBadTimeStamp = -139,
     }
 }
 
@@ -214,7 +215,7 @@ impl <'d> OggOpusFile<'d>
     pub fn bitrate_instant (&self) -> OpusFileResult<i32>
     {
         unsafe {
-            match ffi::op_bitrate_instant(self.of as *const ffi::OggOpusFile) as i32 {
+            match ffi::op_bitrate_instant(self.of as *mut ffi::OggOpusFile) as i32 {
                 e if e < 0 => Err(OpusFileError::from_i32(e as i32).unwrap()),
                 n => Ok(n),
             }
@@ -315,7 +316,7 @@ impl <'d> Drop for OggOpusFile<'d>
 }
 
 
-unsafe extern "C" fn read_cb (src : *mut libc::c_void, buf : *mut libc::c_uchar, size : libc::c_int) -> libc::c_int {
+extern "C" fn read_cb (src : *mut libc::c_void, buf : *mut libc::c_uchar, size : libc::c_int) -> libc::c_int {
     fn fill_buffer <R> (mut read : R, mut buf : &mut [u8]) -> usize
         where R : Read
     {
@@ -333,15 +334,17 @@ unsafe extern "C" fn read_cb (src : *mut libc::c_void, buf : *mut libc::c_uchar,
         i
     }
 
-    let buf = slice::from_raw_parts_mut(buf, size as usize);
-    match *(src as *mut DataSource) {
-        DataSource::Read(ref mut r) => fill_buffer(r, buf) as i32,
-        DataSource::ReadSeek(ref mut r) => fill_buffer(r, buf) as i32,
+    unsafe {
+        let buf = slice::from_raw_parts_mut(buf, size as usize);
+        match *(src as *mut DataSource) {
+            DataSource::Read(ref mut r) => fill_buffer(r, buf) as i32,
+            DataSource::ReadSeek(ref mut r) => fill_buffer(r, buf) as i32,
+        }
     }
 }
 
 
-unsafe extern "C" fn seek_cb (src : *mut libc::c_void, pos: i64, style : libc::c_int) -> libc::c_int {
+extern "C" fn seek_cb (src : *mut libc::c_void, pos: i64, style : libc::c_int) -> libc::c_int {
     let pos = match style {
         libc::SEEK_SET => io::SeekFrom::Start(pos as u64),
         libc::SEEK_CUR => io::SeekFrom::Current(pos),
@@ -349,33 +352,37 @@ unsafe extern "C" fn seek_cb (src : *mut libc::c_void, pos: i64, style : libc::c
         _ => return -1,
     };
     
-    match *(src as *mut DataSource) {
-        DataSource::ReadSeek(ref mut s) => {
-            loop {
-                match s.seek(pos) {
-                    Ok(_) => return 0,
-                    Err(ref e) if e.kind() == io::ErrorKind::Interrupted => continue,
-                    Err(_) => return -1,
+    unsafe {
+        match *(src as *mut DataSource) {
+            DataSource::ReadSeek(ref mut s) => {
+                loop {
+                    match s.seek(pos) {
+                        Ok(_) => return 0,
+                        Err(ref e) if e.kind() == io::ErrorKind::Interrupted => continue,
+                        Err(_) => return -1,
+                    }
                 }
             }
+            _ => -1,
         }
-        _ => -1,
     }
 }
 
 
-unsafe extern "C" fn tell_cb (src : *mut libc::c_void) -> i64 {
-    match *(src as *mut DataSource) {
-        DataSource::ReadSeek(ref mut s) => {
-            loop {
-                match s.seek(io::SeekFrom::Current(0)) {
-                    Ok(pos) => return pos as i64,
-                    Err(ref e) if e.kind() == io::ErrorKind::Interrupted => continue,
-                    Err(_) => return -1,
+extern "C" fn tell_cb (src : *mut libc::c_void) -> i64 {
+    unsafe {
+        match *(src as *mut DataSource) {
+            DataSource::ReadSeek(ref mut s) => {
+                loop {
+                    match s.seek(io::SeekFrom::Current(0)) {
+                        Ok(pos) => return pos as i64,
+                        Err(ref e) if e.kind() == io::ErrorKind::Interrupted => continue,
+                        Err(_) => return -1,
+                    }
                 }
             }
+            _ => -1,
         }
-        _ => -1,
     }
 }
 

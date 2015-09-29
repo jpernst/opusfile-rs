@@ -9,17 +9,12 @@ repository = "https://github.com/jpernst/opusfile-rs"
 documentation = "http://jpernst.github.io/opusfile-rs"
 keywords = ["opus", "codec", "sound", "audio"]
 
-build = "build.rs"
-links = "opusfile"
-
 
 [lib]
 name = "opusfile"
 
-[build-dependencies]
-pkg-config = "*"
-
 [dependencies]
 libc = "*"
 enum_primitive = "*"
+opusfile-sys = "*"
 
