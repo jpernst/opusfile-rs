@@ -3,7 +3,6 @@
 extern crate libc;
 #[macro_use]
 extern crate enum_primitive;
-extern crate opusfile_sys;
 
 use std::borrow::ToOwned;
 use std::vec::Vec;
@@ -12,10 +11,10 @@ use std::io::{Read, Seek};
 use std::ffi::CStr;
 use enum_primitive::FromPrimitive;
 
-use opusfile_sys as opus;
+mod ffi;
 
 
-static CB : opus::OpusFileCallbacks = opus::OpusFileCallbacks {
+static CB : ffi::OpusFileCallbacks = ffi::OpusFileCallbacks {
     read:  read_cb,
     seek:  Some(seek_cb),
     tell:  Some(tell_cb),
@@ -27,21 +26,21 @@ enum_from_primitive! {
     #[derive(Copy, Clone, PartialEq, Eq, Debug)]
     pub enum OpusFileError
     {
-        False         = opus::OP_FALSE as isize,
-        Eof           = opus::OP_EOF as isize,
-        Hole          = opus::OP_HOLE as isize,
-        ERead         = opus::OP_EREAD as isize,
-        EFault        = opus::OP_EFAULT as isize,
-        EImpl         = opus::OP_EIMPL as isize,
-        EInval        = opus::OP_EINVAL as isize,
-        ENotFormat    = opus::OP_ENOTFORMAT as isize,
-        EBadHeader    = opus::OP_EBADHEADER as isize,
-        EVersion      = opus::OP_EVERSION as isize,
-        ENotAudio     = opus::OP_ENOTAUDIO as isize,
-        EBadPacket    = opus::OP_EBADPACKET as isize,
-        EBadLink      = opus::OP_EBADLINK as isize,
-        ENoSeek       = opus::OP_ENOSEEK as isize,
-        EBadTimeStamp = opus::OP_EBADTIMESTAMP as isize,
+        False         = ffi::OP_FALSE as isize,
+        Eof           = ffi::OP_EOF as isize,
+        Hole          = ffi::OP_HOLE as isize,
+        ERead         = ffi::OP_EREAD as isize,
+        EFault        = ffi::OP_EFAULT as isize,
+        EImpl         = ffi::OP_EIMPL as isize,
+        EInval        = ffi::OP_EINVAL as isize,
+        ENotFormat    = ffi::OP_ENOTFORMAT as isize,
+        EBadHeader    = ffi::OP_EBADHEADER as isize,
+        EVersion      = ffi::OP_EVERSION as isize,
+        ENotAudio     = ffi::OP_ENOTAUDIO as isize,
+        EBadPacket    = ffi::OP_EBADPACKET as isize,
+        EBadLink      = ffi::OP_EBADLINK as isize,
+        ENoSeek       = ffi::OP_ENOSEEK as isize,
+        EBadTimeStamp = ffi::OP_EBADTIMESTAMP as isize,
     }
 }
 
@@ -61,7 +60,7 @@ enum DataSource <'d> {
 
 pub struct OggOpusFile <'d>
 {
-    of    : *mut opus::OggOpusFile,
+    of    : *mut ffi::OggOpusFile,
     _data : *mut DataSource<'d>,
 }
 impl <'d> OggOpusFile<'d>
@@ -70,7 +69,7 @@ impl <'d> OggOpusFile<'d>
     {
         unsafe {
             let mut e: libc::c_int = 0;
-            match opus::op_open_memory(data.as_ptr() as *const libc::c_uchar, data.len() as libc::size_t, &mut e as *mut libc::c_int) {
+            match ffi::op_open_memory(data.as_ptr() as *const libc::c_uchar, data.len() as libc::size_t, &mut e as *mut libc::c_int) {
                 of if of != ptr::null_mut() => Ok(OggOpusFile { of: of, _data: ptr::null_mut(), }),
                 _ => Err(OpusFileError::from_isize(e as isize).unwrap()),
             }
@@ -82,7 +81,7 @@ impl <'d> OggOpusFile<'d>
         unsafe {
             let mut e: libc::c_int = 0;
             let data = mem::transmute(Box::new(DataSource::Read(data)));
-            match opus::op_open_callbacks(data, &CB, ptr::null(), 0, &mut e as *mut libc::c_int) {
+            match ffi::op_open_callbacks(data, &CB, ptr::null(), 0, &mut e as *mut libc::c_int) {
                 of if of != ptr::null_mut() => Ok(OggOpusFile { of: of, _data: data as *mut _, }),
                 _ => Err(OpusFileError::from_isize(e as isize).unwrap()),
             }
@@ -94,7 +93,7 @@ impl <'d> OggOpusFile<'d>
         unsafe {
             let mut e: libc::c_int = 0;
             let data = mem::transmute(Box::new(DataSource::ReadSeek(data)));
-            match opus::op_open_callbacks(data, &CB, ptr::null(), 0, &mut e as *mut libc::c_int) {
+            match ffi::op_open_callbacks(data, &CB, ptr::null(), 0, &mut e as *mut libc::c_int) {
                 of if of != ptr::null_mut() => Ok(OggOpusFile { of: of, _data: data as *mut _, }),
                 _ => Err(OpusFileError::from_isize(e as isize).unwrap()),
             }
@@ -104,32 +103,32 @@ impl <'d> OggOpusFile<'d>
     
     pub fn seekable (&self) -> bool
     {
-        unsafe { opus::op_seekable(self.of as *const opus::OggOpusFile) != 0 }
+        unsafe { ffi::op_seekable(self.of as *const ffi::OggOpusFile) != 0 }
     }
     
     
     pub fn link_count (&self) -> i32
     {
-        unsafe { opus::op_link_count(self.of as *const opus::OggOpusFile) as i32 }
+        unsafe { ffi::op_link_count(self.of as *const ffi::OggOpusFile) as i32 }
     }
     
     
     pub fn serial_no (&self, li : Option<i32> ) -> u32
     {
-        unsafe { opus::op_serialno(self.of as *const opus::OggOpusFile, li.unwrap_or(-1) as libc::c_int) as u32 }
+        unsafe { ffi::op_serialno(self.of as *const ffi::OggOpusFile, li.unwrap_or(-1) as libc::c_int) as u32 }
     }
     
     
     pub fn channel_count (&self, li : Option<i32> ) -> i32
     {
-        unsafe { opus::op_channel_count(self.of as *const opus::OggOpusFile, li.unwrap_or(-1) as libc::c_int) as i32 }
+        unsafe { ffi::op_channel_count(self.of as *const ffi::OggOpusFile, li.unwrap_or(-1) as libc::c_int) as i32 }
     }
     
     
     pub fn raw_total (&self, li : Option<i32> ) -> OpusFileResult<i64>
     {
         unsafe {
-            match opus::op_raw_total(self.of as *const opus::OggOpusFile, li.unwrap_or(-1) as libc::c_int) as i64 {
+            match ffi::op_raw_total(self.of as *const ffi::OggOpusFile, li.unwrap_or(-1) as libc::c_int) as i64 {
                 e if e < 0 => Err(OpusFileError::from_i32(e as i32).unwrap()),
                 n => Ok(n),
             }
@@ -140,7 +139,7 @@ impl <'d> OggOpusFile<'d>
     pub fn pcm_total (&self, li : Option<i32> ) -> OpusFileResult<i64>
     {
         unsafe {
-            match opus::op_pcm_total(self.of as *const opus::OggOpusFile, li.unwrap_or(-1) as libc::c_int) as i64 {
+            match ffi::op_pcm_total(self.of as *const ffi::OggOpusFile, li.unwrap_or(-1) as libc::c_int) as i64 {
                 e if e < 0 => Err(OpusFileError::from_i32(e as i32).unwrap()),
                 n => Ok(n),
             }
@@ -151,7 +150,7 @@ impl <'d> OggOpusFile<'d>
     pub fn head (&self, li : Option<i32>) -> Option<OpusHead>
     {
         unsafe {
-            match opus::op_head(self.of as *const opus::OggOpusFile, li.unwrap_or(-1) as libc::c_int) {
+            match ffi::op_head(self.of as *const ffi::OggOpusFile, li.unwrap_or(-1) as libc::c_int) {
                 oh if oh != ptr::null() => Some(OpusHead{
                     version:           (*oh).version as i32,
                     channel_count:     (*oh).channel_count as u8,
@@ -172,7 +171,7 @@ impl <'d> OggOpusFile<'d>
     pub fn tags (&self, li : Option<i32>) -> Option<OpusTags>
     {
         unsafe {
-            match opus::op_tags(self.of as *const opus::OggOpusFile, li.unwrap_or(-1) as libc::c_int) {
+            match ffi::op_tags(self.of as *const ffi::OggOpusFile, li.unwrap_or(-1) as libc::c_int) {
                 ot if ot != ptr::null() => Some(OpusTags {
                     user_comments: (0 .. (*ot).comments as usize).filter_map(|ci| {
                         let len = *((*ot).comment_lengths as *const i32).offset(ci as isize) as usize;
@@ -195,7 +194,7 @@ impl <'d> OggOpusFile<'d>
     pub fn current_link (&self) -> OpusFileResult<i32>
     {
         unsafe {
-            match opus::op_current_link(self.of as *const opus::OggOpusFile) as i32 {
+            match ffi::op_current_link(self.of as *const ffi::OggOpusFile) as i32 {
                 e if e < 0 => Err(OpusFileError::from_i32(e as i32).unwrap()),
                 n => Ok(n),
             }
@@ -205,7 +204,7 @@ impl <'d> OggOpusFile<'d>
     pub fn bitrate (&self, li : Option<i32>) -> OpusFileResult<i32>
     {
         unsafe {
-            match opus::op_bitrate(self.of as *const opus::OggOpusFile, li.unwrap_or(-1) as libc::c_int) as i32 {
+            match ffi::op_bitrate(self.of as *const ffi::OggOpusFile, li.unwrap_or(-1) as libc::c_int) as i32 {
                 e if e < 0 => Err(OpusFileError::from_i32(e as i32).unwrap()),
                 n => Ok(n),
             }
@@ -215,7 +214,7 @@ impl <'d> OggOpusFile<'d>
     pub fn bitrate_instant (&self) -> OpusFileResult<i32>
     {
         unsafe {
-            match opus::op_bitrate_instant(self.of as *const opus::OggOpusFile) as i32 {
+            match ffi::op_bitrate_instant(self.of as *const ffi::OggOpusFile) as i32 {
                 e if e < 0 => Err(OpusFileError::from_i32(e as i32).unwrap()),
                 n => Ok(n),
             }
@@ -225,7 +224,7 @@ impl <'d> OggOpusFile<'d>
     pub fn raw_tell (&self) -> OpusFileResult<i64>
     {
         unsafe {
-            match opus::op_raw_tell(self.of as *const opus::OggOpusFile) as i64 {
+            match ffi::op_raw_tell(self.of as *const ffi::OggOpusFile) as i64 {
                 e if e < 0 => Err(OpusFileError::from_i32(e as i32).unwrap()),
                 n => Ok(n),
             }
@@ -235,7 +234,7 @@ impl <'d> OggOpusFile<'d>
     pub fn pcm_tell (&self) -> OpusFileResult<i64>
     {
         unsafe {
-            match opus::op_pcm_tell(self.of as *const opus::OggOpusFile) as i64 {
+            match ffi::op_pcm_tell(self.of as *const ffi::OggOpusFile) as i64 {
                 e if e < 0 => Err(OpusFileError::from_i32(e as i32).unwrap()),
                 n => Ok(n),
             }
@@ -244,7 +243,7 @@ impl <'d> OggOpusFile<'d>
     
     pub fn raw_seek (&mut self, offset : i64) -> OpusFileResult<()> {
         unsafe {
-            match opus::op_raw_seek(self.of, offset) {
+            match ffi::op_raw_seek(self.of, offset) {
                 0 => Ok(()),
                 e => Err(OpusFileError::from_i32(e as i32).unwrap()),
             }
@@ -253,7 +252,7 @@ impl <'d> OggOpusFile<'d>
     
     pub fn pcm_seek (&mut self, offset : i64) -> OpusFileResult<()> {
         unsafe {
-            match opus::op_raw_seek(self.of, offset) {
+            match ffi::op_pcm_seek(self.of, offset) {
                 0 => Ok(()),
                 e => Err(OpusFileError::from_i32(e as i32).unwrap()),
             }
@@ -264,7 +263,7 @@ impl <'d> OggOpusFile<'d>
     {
         unsafe {
             let li = li.map(|li| li as *mut i32 as *mut libc::c_int).unwrap_or(ptr::null_mut());
-            match opus::op_read(self.of, pcm.as_mut_ptr(), pcm.len() as libc::c_int, li) {
+            match ffi::op_read(self.of, pcm.as_mut_ptr(), pcm.len() as libc::c_int, li) {
                 e if e < 0 => Err(OpusFileError::from_i32(e as i32).unwrap()),
                 n          => Ok(n as i32),
             }
@@ -275,7 +274,7 @@ impl <'d> OggOpusFile<'d>
     {
         unsafe {
             let li = li.map(|li| li as *mut i32 as *mut libc::c_int).unwrap_or(ptr::null_mut());
-            match opus::op_read_float(self.of, pcm.as_mut_ptr(), pcm.len() as libc::c_int, li) {
+            match ffi::op_read_float(self.of, pcm.as_mut_ptr(), pcm.len() as libc::c_int, li) {
                 e if e < 0 => Err(OpusFileError::from_i32(e as i32).unwrap()),
                 n          => Ok(n as i32),
             }
@@ -285,7 +284,7 @@ impl <'d> OggOpusFile<'d>
     pub fn read_stereo (&mut self, pcm : &mut [i16]) -> OpusFileResult<i32>
     {
         unsafe {
-            match opus::op_read_stereo(self.of, pcm.as_mut_ptr(), pcm.len() as libc::c_int) {
+            match ffi::op_read_stereo(self.of, pcm.as_mut_ptr(), pcm.len() as libc::c_int) {
                 e if e < 0 => Err(OpusFileError::from_i32(e as i32).unwrap()),
                 n          => Ok(n as i32),
             }
@@ -295,7 +294,7 @@ impl <'d> OggOpusFile<'d>
     pub fn read_float_stereo (&mut self, pcm : &mut [f32]) -> OpusFileResult<i32>
     {
         unsafe {
-            match opus::op_read_float_stereo(self.of, pcm.as_mut_ptr(), pcm.len() as libc::c_int) {
+            match ffi::op_read_float_stereo(self.of, pcm.as_mut_ptr(), pcm.len() as libc::c_int) {
                 e if e < 0 => Err(OpusFileError::from_i32(e as i32).unwrap()),
                 n          => Ok(n as i32),
             }
@@ -307,7 +306,7 @@ impl <'d> Drop for OggOpusFile<'d>
     fn drop (&mut self)
     {
         unsafe {
-            opus::op_free(self.of);
+            ffi::op_free(self.of);
             if self._data != ptr::null_mut() {
                 let _ : Box<DataSource<'d>> = mem::transmute(self._data);
             }
