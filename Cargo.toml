@@ -3,6 +3,9 @@ name = "opusfile-rs"
 version = "0.1.0"
 authors = ["Jameson Ernst"]
 
+repository = "https://github.com/jpernst/opusfile-rs"
+documentation = "http://jpernst.github.io/opusfile-rs"
+keywords = ["opus", "codec", "sound", "audio"]
 
 [lib]
 name = "opusfile"
