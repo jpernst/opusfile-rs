@@ -1,8 +1,9 @@
 language: rust
-before_install:
-- sudo apt-get update
-install:
-- sudo apt-get install libopusfile-dev
+sudo: false
+addons:
+  apt:
+    packages:
+    - libopusfile-dev
 script:
 - cargo test
 - cargo doc
