@@ -2,17 +2,31 @@
 
 extern crate opusfile;
 
-use std::fs;
-use std::path::Path;
+
+static OPUS_DATA : &'static [u8] = include_bytes!("bach.opus");
 
 
 #[test]
-fn metadata ()
+fn header ()
 {
-    let mut file = fs::File::open(Path::new(".").join("tests").join("bach.opus")).unwrap();
-    let opus = opusfile::OggOpusFile::from_read(&mut file).unwrap();
-
+    let opus = opusfile::OggOpusFile::from_slice(OPUS_DATA).unwrap();
     let head = opus.head(None).unwrap();
+
+    assert_eq!(head.mapping, vec![0, 1]);
+    assert_eq!(head.version, 1);
+    assert_eq!(head.pre_skip, 356);
+    assert_eq!(head.input_sample_rate, 44100);
+    assert_eq!(head.output_gain, 0);
+    assert_eq!(head.mapping_family, 0);
+    assert_eq!(head.channel_count, 2);
+    assert_eq!(head.stream_count, 1);
+    assert_eq!(head.coupled_count, 1);
+}
+
+#[test]
+fn tags ()
+{
+    let opus = opusfile::OggOpusFile::from_slice(OPUS_DATA).unwrap();
     let tags = opus.tags(None).unwrap();
 
     assert_eq!(tags.user_comments.len(), 9);
