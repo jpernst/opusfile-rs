@@ -10,6 +10,8 @@ use std::vec::Vec;
 use std::{mem, slice, io, ptr};
 use std::io::{Read, Seek};
 use std::ffi::CStr;
+use std::fmt::{self, Display};
+use std::error::Error as StdError;
 use enum_primitive::FromPrimitive;
 
 use opusfile_sys as ffi;
@@ -42,6 +44,36 @@ enum_from_primitive! {
         EBadLink      = -137,
         ENoSeek       = -138,
         EBadTimeStamp = -139,
+    }
+}
+impl Display for OpusFileError
+{
+    fn fmt (&self, fmt : &mut fmt::Formatter) -> Result<(), fmt::Error>
+    {
+        write!(fmt, "{}", self.description())
+    }
+}
+impl StdError for OpusFileError
+{
+    fn description (&self) -> &str
+    {
+        match *self {
+            OpusFileError::False         => "False",
+            OpusFileError::Eof           => "Eof",
+            OpusFileError::Hole          => "Hole",
+            OpusFileError::ERead         => "ERead",
+            OpusFileError::EFault        => "EFault",
+            OpusFileError::EImpl         => "EImpl",
+            OpusFileError::EInval        => "EInval",
+            OpusFileError::ENotFormat    => "ENotFormat",
+            OpusFileError::EBadHeader    => "EBadHeader",
+            OpusFileError::EVersion      => "EVersion",
+            OpusFileError::ENotAudio     => "ENotAudio",
+            OpusFileError::EBadPacket    => "EBadPacket",
+            OpusFileError::EBadLink      => "EBadLink",
+            OpusFileError::ENoSeek       => "ENoSeek",
+            OpusFileError::EBadTimeStamp => "EBadTimeStamp",
+        }
     }
 }
 
