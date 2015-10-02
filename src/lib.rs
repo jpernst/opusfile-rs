@@ -349,7 +349,7 @@ impl <'d> Drop for OggOpusFile<'d>
 
 
 extern "C" fn read_cb (src : *mut libc::c_void, buf : *mut libc::c_uchar, size : libc::c_int) -> libc::c_int {
-    fn fill_buffer <R> (mut read : R, mut buf : &mut [u8]) -> usize
+    fn fill_buffer <R> (mut read : R, mut buf : &mut [u8]) -> Result<usize, ()>
         where R : Read
     {
         let mut i = 0;
@@ -359,24 +359,31 @@ extern "C" fn read_cb (src : *mut libc::c_void, buf : *mut libc::c_uchar, size :
                 Ok(0) => break,
                 Ok(n) => i += n,
                 Err(ref e) if e.kind() == io::ErrorKind::Interrupted => continue,
-                Err(_) => break,
+                Err(_) => return Err(()),
             }
         }
 
-        i
+        Ok(i)
+    }
+
+    if src == ptr::null_mut() {
+        return -1;
     }
 
     unsafe {
         let buf = slice::from_raw_parts_mut(buf, size as usize);
         match *(src as *mut DataSource) {
-            DataSource::Read(ref mut r) => fill_buffer(r, buf) as i32,
-            DataSource::ReadSeek(ref mut r) => fill_buffer(r, buf) as i32,
+            DataSource::Read(ref mut r) => fill_buffer(r, buf).map(|n| n as i32).unwrap_or(-1),
+            DataSource::ReadSeek(ref mut r) => fill_buffer(r, buf).map(|n| n as i32).unwrap_or(-1),
         }
     }
 }
 
 
 extern "C" fn seek_cb (src : *mut libc::c_void, pos: i64, style : libc::c_int) -> libc::c_int {
+    if src == ptr::null_mut() {
+        return -1;
+    }
     let pos = match style {
         libc::SEEK_SET => io::SeekFrom::Start(pos as u64),
         libc::SEEK_CUR => io::SeekFrom::Current(pos),
@@ -402,6 +409,10 @@ extern "C" fn seek_cb (src : *mut libc::c_void, pos: i64, style : libc::c_int) -
 
 
 extern "C" fn tell_cb (src : *mut libc::c_void) -> i64 {
+    if src == ptr::null_mut() {
+        return -1;
+    }
+
     unsafe {
         match *(src as *mut DataSource) {
             DataSource::ReadSeek(ref mut s) => {

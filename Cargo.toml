@@ -1,6 +1,6 @@
 [package]
 name = "opusfile-rs"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["Jameson Ernst"]
 description = "Rust wrapper for libopusfile"
 license = "MIT"
