@@ -1,6 +1,6 @@
 [package]
 name = "opusfile-rs"
-version = "0.1.2"
+version = "0.1.3"
 authors = ["Jameson Ernst"]
 description = "Rust wrapper for libopusfile"
 license = "MIT"
@@ -14,7 +14,7 @@ keywords = ["opus", "opusfile", "codec", "sound", "audio"]
 name = "opusfile"
 
 [dependencies]
-libc = "*"
-enum_primitive = "*"
-opusfile-sys = "*"
+libc = "0.1"
+enum_primitive = "0.1"
+opusfile-sys = "0.1"
 
